@@ -1,7 +1,6 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart'; // Import flutter_slidable package
 import 'package:todak_assessment/main.dart';
 import 'package:todak_assessment/object/cart_obj.dart';
 import 'package:todak_assessment/object/order_obj.dart';
@@ -80,7 +79,7 @@ class _CartState extends State<Cart> {
                 child: ListView.builder(
                   itemCount: cartItems.length,
                   itemBuilder: (context, index) {
-                    return buildCartItemWidget(cartItems[index]);
+                    return buildSlidableCartItemWidget(cartItems[index]);
                   },
                 ),
               );
@@ -91,76 +90,101 @@ class _CartState extends State<Cart> {
     );
   }
 
+  Widget buildSlidableCartItemWidget(CartItem cartItem) {
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: Slidable(
+        key: ValueKey(cartItem),
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              onPressed: (BuildContext context) async {
+                bool itemRemoved =
+                    await SharedPreferencesHandler.removeCartItem(cartItem);
+                if (itemRemoved) {
+                  setState(() {
+                    _cartItemsFuture = SharedPreferencesHandler.getCart();
+                  });
+                }
+              },
+              backgroundColor: CupertinoColors.destructiveRed,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              label: 'Delete',
+            ),
+          ],
+        ),
+        child: buildCartItemWidget(cartItem),
+      ),
+    );
+  }
+
   Widget buildCartItemWidget(CartItem cartItem) {
     final product = cartItem.product;
     final itemPrice = product.price * cartItem.quantity;
 
-    return Column(
-      children: [
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: CupertinoColors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                spreadRadius: 1,
-                blurRadius: 1,
-                offset: const Offset(0, 1),
-              ),
-            ],
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: CupertinoColors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 1,
+            offset: const Offset(0, 1),
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                clipBehavior: Clip.antiAlias,
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            clipBehavior: Clip.antiAlias,
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Image.network(
+              product.thumbnail,
+              fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  product.title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                child: Image.network(
-                  product.thumbnail,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Text('Quantity: ${cartItem.quantity}'),
                     Text(
-                      product.title,
+                      'RM$itemPrice',
                       style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: CupertinoColors.black),
                     ),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Quantity: ${cartItem.quantity}'),
-                        Text(
-                          'RM$itemPrice',
-                          style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: CupertinoColors.black),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
                   ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 10),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

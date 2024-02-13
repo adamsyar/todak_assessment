@@ -64,6 +64,16 @@ class _ProfileState extends State<Profile> {
                 ),
                 const SizedBox(height: 20),
                 buildAddress(),
+                const Spacer(),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Log Out',
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                  ),
+                ),
               ],
             ),
           ),

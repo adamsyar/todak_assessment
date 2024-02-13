@@ -15,10 +15,10 @@ class SharedPreferencesHandler {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       final String profileJson = jsonEncode(profile.toJson());
       await prefs.setString(_profileKey, profileJson);
-      return true; // Operation succeeded
+      return true;
     } catch (e) {
       print('Error saving profile: $e');
-      return false; // Operation failed
+      return false;
     }
   }
 
@@ -40,15 +40,14 @@ class SharedPreferencesHandler {
   static Future<bool> addAddress(String newAddress) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final ProfileInfo profile = await getProfile(); // Get the current profile
-      profile.addresses.add(newAddress); // Add the new address
+      final ProfileInfo profile = await getProfile();
+      profile.addresses.add(newAddress);
       final String updatedProfileJson = jsonEncode(profile.toJson());
-      await prefs.setString(
-          _profileKey, updatedProfileJson); // Save the updated profile
-      return true; // Operation succeeded
+      await prefs.setString(_profileKey, updatedProfileJson);
+      return true;
     } catch (e) {
       print('Error adding address: $e');
-      return false; // Operation failed
+      return false;
     }
   }
 
@@ -71,7 +70,6 @@ class SharedPreferencesHandler {
 
       if (cartJsonString != null) {
         final List<dynamic> existingCartJson = jsonDecode(cartJsonString);
-
         existingCartItems = existingCartJson.map((json) {
           final productJson = json['product'];
           final product = Product.fromJson(productJson);
@@ -91,10 +89,10 @@ class SharedPreferencesHandler {
           .toList();
 
       await prefs.setString(_cartKey, jsonEncode(updatedCartJson));
-      return true; 
+      return true;
     } catch (e) {
       print('Error saving cart: $e');
-      return false; 
+      return false;
     }
   }
 
@@ -138,26 +136,51 @@ class SharedPreferencesHandler {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.remove(_cartKey);
-      return true; // Operation succeeded
+      return true;
     } catch (e) {
       print('Error clearing cart: $e');
-      return false; // Operation failed
+      return false;
+    }
+  }
+
+  static Future<bool> removeCartItem(CartItem cartItemToRemove) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final String? cartJsonString = prefs.getString(_cartKey);
+      if (cartJsonString != null) {
+        final List<dynamic> existingCartJson = jsonDecode(cartJsonString);
+        List<dynamic> updatedCartJson = existingCartJson.where((json) {
+          final productJson = json['product'];
+          final product = Product.fromJson(productJson);
+          final quantity = json['quantity'];
+          final existingCartItem =
+              CartItem(product: product, quantity: quantity);
+          return existingCartItem.product.id != cartItemToRemove.product.id;
+        }).toList();
+
+        await prefs.setString(_cartKey, jsonEncode(updatedCartJson));
+        return true;
+      }
+
+      return false;
+    } catch (e) {
+      print('Error removing cart item: $e');
+      return false;
     }
   }
 
   static Future<bool> saveOrder(Order order) async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      List<Order> orders = await getOrders(); // Retrieve existing orders
-      orders.add(order); // Add the new order to the list
+      List<Order> orders = await getOrders();
+      orders.add(order);
       final List<String> orderJsonList =
           orders.map((order) => jsonEncode(order.toJson())).toList();
-      await prefs.setStringList(
-          _orderKey, orderJsonList); // Save the list of orders
-      return true; // Operation succeeded
+      await prefs.setStringList(_orderKey, orderJsonList);
+      return true;
     } catch (e) {
       print('Error saving order: $e');
-      return false; // Operation failed
+      return false;
     }
   }
 

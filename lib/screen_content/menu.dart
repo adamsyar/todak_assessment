@@ -20,6 +20,13 @@ class _MenuState extends State<Menu> {
 
   @override
   Widget build(BuildContext context) {
+    // Get current time
+    DateTime now = DateTime.now();
+    int hour = now.hour;
+
+    // Decide whether it's morning or evening
+    String greeting = (hour < 12) ? 'Good Morning.' : 'Good Evening.';
+
     return BlocBuilder<ProductBloc, ProductBlocState>(
       builder: (context, state) {
         if (state.status == ApiStatus.loading) {
@@ -65,7 +72,7 @@ class _MenuState extends State<Menu> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 10),
                               child: Text(
-                                'Hi Adam',
+                                greeting,
                                 style: const TextStyle(
                                     fontSize: 28,
                                     fontWeight: FontWeight.w500,
