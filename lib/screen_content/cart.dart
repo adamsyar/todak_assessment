@@ -29,15 +29,11 @@ class _CartState extends State<Cart> {
   Future<void> _loadCartItems() async {
     _cartItemsFuture = SharedPreferencesHandler.getCart();
     ProfileInfo profile = await SharedPreferencesHandler.getProfile();
-    if (profile.addresses.isNotEmpty) {
-      setState(() {
-        selectedAddress = profile.addresses.first;
-      });
-    } else {
-      setState(() {
-        selectedAddress = 'No address available';
-      });
-    }
+    setState(() {
+      selectedAddress = profile.addresses.isNotEmpty
+          ? profile.addresses.first
+          : 'No address available';
+    });
   }
 
   @override

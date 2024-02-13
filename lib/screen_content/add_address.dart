@@ -26,32 +26,7 @@ class _AddAddressPageState extends State<AddAddressPage> {
         title: const Text('Add Address',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),),
       ),
-      bottomNavigationBar: BottomAppBar(
-          color: CupertinoColors.white,
-          elevation: 0,
-          child: CustomButton(
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                final address = '${addressController.text}, '
-                    '${cityController.text}, '
-                    '${postcodeController.text}, '
-                    '${stateController.text}';
-                final success =
-                    await SharedPreferencesHandler.addAddress(address);
-                if (success) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Address added successfully')),
-                  );
-                  Navigator.pop(context, true);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Failed to add address')),
-                  );
-                }
-              }
-            },
-            text: 'Save',
-          )),
+      bottomNavigationBar: buildBottomAppBar(context),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
@@ -87,6 +62,35 @@ class _AddAddressPageState extends State<AddAddressPage> {
         ),
       ),
     );
+  }
+
+  BottomAppBar buildBottomAppBar(BuildContext context) {
+    return BottomAppBar(
+        color: CupertinoColors.white,
+        elevation: 0,
+        child: CustomButton(
+          onPressed: () async {
+            if (_formKey.currentState!.validate()) {
+              final address = '${addressController.text}, '
+                  '${cityController.text}, '
+                  '${postcodeController.text}, '
+                  '${stateController.text}';
+              final success =
+                  await SharedPreferencesHandler.addAddress(address);
+              if (success) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Address added successfully')),
+                );
+                Navigator.pop(context, true);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Failed to add address')),
+                );
+              }
+            }
+          },
+          text: 'Save',
+        ));
   }
 
   Widget _buildTextFormField({
