@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:todak_assessment/main.dart';
 import 'package:todak_assessment/object/profile_obj.dart';
-import 'package:todak_assessment/screen_content/widget/add_address.dart';
+import 'package:todak_assessment/screen_content/add_address.dart';
+import 'package:todak_assessment/screen_content/widget/custom_elavated_button.dart';
 import 'package:todak_assessment/shared_preferences.dart';
 
 class Address extends StatefulWidget {
@@ -117,48 +118,22 @@ class _AddressState extends State<Address> {
 
   BottomAppBar buildAddToCartButton(BuildContext context) {
     return BottomAppBar(
-      color: CupertinoColors.white,
-      child: buildCustomButton(context, () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AddAddressPage()),
-        ).then((value) {
-          if (value == true) {
-            setState(() {
-              _profileFuture = SharedPreferencesHandler.getProfile();
+        color: CupertinoColors.white,
+        child: CustomButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AddAddressPage()),
+            ).then((value) {
+              if (value == true) {
+                setState(() {
+                  _profileFuture = SharedPreferencesHandler.getProfile();
+                });
+              }
             });
-          }
-        });
-      }),
-    );
-  }
-
-  ElevatedButton buildCustomButton(BuildContext context, Function() onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(CupertinoColors.black),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-        // Define fixed button height
-        minimumSize: MaterialStateProperty.all(const Size(double.infinity, 56)),
-      ),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.add,
-            size: 20,
-            color: CupertinoColors.white,
-          ), // Add cart icon here
-          SizedBox(width: 5),
-          Text(
-            'Add Address',
-            style: TextStyle(color: CupertinoColors.white),
-          ),
-        ],
-      ),
-    );
+          },
+          text: 'Add Address',
+          iconData: Icons.add,
+        ));
   }
 }
