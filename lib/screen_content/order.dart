@@ -106,7 +106,8 @@ class _CompletedOrderState extends State<CompletedOrder> {
                                                 style: const TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.w500,
-                                                    color: CupertinoColors.black),
+                                                    color:
+                                                        CupertinoColors.black),
                                               ),
                                               Text(
                                                 order.date,
@@ -120,18 +121,24 @@ class _CompletedOrderState extends State<CompletedOrder> {
                                       ),
                                     ),
                                     const SizedBox(height: 10),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        for (var cartItem in order.cartItems)
-                                          Text(
-                                            cartItem.product.title,
-                                            style:
-                                                const TextStyle(fontSize: 14),
-                                          ),
-                                      ],
+                                    Text(
+                                      '${order.cartItems.length} items',
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500),
                                     ),
+                                    // Column(
+                                    //   crossAxisAlignment:
+                                    //       CrossAxisAlignment.start,
+                                    //   children: [
+                                    //     for (var cartItem in order.cartItems)
+                                    //       Text(
+                                    //         cartItem.product.title,
+                                    //         style:
+                                    //             const TextStyle(fontSize: 14),
+                                    //       ),
+                                    //   ],
+                                    // ),
                                   ],
                                 ),
                               ),

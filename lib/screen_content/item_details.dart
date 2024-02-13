@@ -5,6 +5,7 @@ import 'package:todak_assessment/bloc/product_bloc.dart';
 import 'package:todak_assessment/main.dart';
 import 'package:todak_assessment/object/cart_obj.dart';
 import 'package:todak_assessment/object/product_obj.dart';
+import 'package:todak_assessment/screen_content/widget/custom_elavated_button.dart';
 import 'package:todak_assessment/shared_preferences.dart';
 
 class ProductDetailsPage extends StatefulWidget {
@@ -67,10 +68,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             Text(
               'RM${widget.product.price.toStringAsFixed(2)}',
               style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: CupertinoColors.black
-              ),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: CupertinoColors.black),
             ),
             const SizedBox(height: 10),
             Text(
@@ -90,37 +90,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   BottomAppBar buildAddToCartButton(BuildContext context) {
     return BottomAppBar(
       color: CupertinoColors.white,
-      child: buildCustomButton(context, () {
-        buildBottomSheet(context);
-      }),
-    );
-  }
-
-  ElevatedButton buildCustomButton(BuildContext context, Function() onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(CupertinoColors.black),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-        // Define fixed button height
-        minimumSize: MaterialStateProperty.all(const Size(double.infinity, 56)),
-      ),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.shopping_cart,
-            size: 20,
-            color: CupertinoColors.white,
-          ), // Add cart icon here
-          SizedBox(width: 5),
-          Text(
-            'Add to Cart',
-            style: TextStyle(color: CupertinoColors.white),
-          ),
-        ],
+      child: CustomButton(
+        onPressed: () {
+          buildBottomSheet(context);
+        },
+        text: 'Add to Cart',
+        iconData: Icons.shopping_cart,
       ),
     );
   }
@@ -134,7 +109,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             return Container(
               height: 250,
               decoration: const BoxDecoration(
-                color:CupertinoColors.white,
+                color: CupertinoColors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
@@ -198,9 +173,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ],
                   ),
                   const Spacer(),
-                  buildCustomButton(
-                    context,
-                    () async {
+                  CustomButton(
+                    onPressed: () async {
                       bool success = await SharedPreferencesHandler.saveCart([
                         CartItem(
                           product: widget.product,
@@ -209,14 +183,14 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                       ]);
 
                       if (success) {
-                        // Cart saved successfully, perform pop action or any other actions
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       } else {
-                        // Handle failure to save the cart
                         print('Failed to save cart.');
                       }
                     },
+                    text: 'Add to Cart',
+                    iconData: Icons.shopping_cart,
                   ),
                   const SizedBox(height: 30),
                 ],

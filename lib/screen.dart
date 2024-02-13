@@ -50,47 +50,50 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ProductBloc(productApi)..add(FetchProduct()),
-      child: Scaffold(
-        appBar: AppBar(
-          scrolledUnderElevation: 0,
-          backgroundColor: CupertinoColors.black,
-          leading: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              children: [
-                Image.asset(
-                  'assets/Todak_lightmode.png',
-                  height: 35,
-                  width: 35,
-                  color: CupertinoColors.white,
-                ),
-                SizedBox(width: 5),
-                title.elementAt(_selectedIndex),
-              ],
-            ),
-          ),
-          leadingWidth: 300,
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.shopping_cart,
-                color: CupertinoColors.white,
-              ), // Use whatever icon you prefer
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Cart(),
+    return PopScope(
+      canPop: false,
+      child: BlocProvider(
+        create: (context) => ProductBloc(productApi)..add(FetchProduct()),
+        child: Scaffold(
+          appBar: AppBar(
+            scrolledUnderElevation: 0,
+            backgroundColor: CupertinoColors.black,
+            leading: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Row(
+                children: [
+                  Image.asset(
+                    'assets/Todak_lightmode.png',
+                    height: 35,
+                    width: 35,
+                    color: CupertinoColors.white,
                   ),
-                );
-              },
+                  const SizedBox(width: 5),
+                  title.elementAt(_selectedIndex),
+                ],
+              ),
             ),
-          ],
+            leadingWidth: 300,
+            actions: [
+              IconButton(
+                icon: const Icon(
+                  Icons.shopping_cart,
+                  color: CupertinoColors.white,
+                ), // Use whatever icon you prefer
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Cart(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+          body: widgetOptions.elementAt(_selectedIndex),
+          bottomNavigationBar: buildBottomNavigationBar(),
         ),
-        body: widgetOptions.elementAt(_selectedIndex),
-        bottomNavigationBar: buildBottomNavigationBar(),
       ),
     );
   }
@@ -108,13 +111,17 @@ class _HomeScreenState extends State<HomeScreen> {
           label: '',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person),
+          icon: Icon(
+            Icons.person,
+          ),
           label: '',
         ),
       ],
       currentIndex: _selectedIndex,
       selectedItemColor: CupertinoColors.activeBlue,
       unselectedItemColor: CupertinoColors.white,
+      showSelectedLabels: false,
+      showUnselectedLabels: false,
       onTap: _onItemTapped,
     );
   }

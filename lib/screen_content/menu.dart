@@ -51,21 +51,39 @@ class _MenuState extends State<Menu> {
           }
 
           return Scaffold(
-            backgroundColor: primaryBackgroundColor,
+            backgroundColor: CupertinoColors.white,
             body: CustomScrollView(
               slivers: [
-                SliverPadding(
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate([
-                      buildSearchField(),
-                    ]),
-                  ),
-                  padding: const EdgeInsets.all(10),
+                SliverList(
+                  delegate: SliverChildListDelegate([
+                    Container(
+                        color: CupertinoColors.black,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: Text(
+                                'Hi Adam',
+                                style: const TextStyle(
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.w500,
+                                    color: CupertinoColors.white),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: buildSearchField(),
+                            ),
+                          ],
+                        )),
+                  ]),
                 ),
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   sliver: SliverToBoxAdapter(
-                    child: buildCarousel(filteredProducts),
+                    child: buildCarousel(state.product),
                   ),
                 ),
                 SliverPadding(
@@ -73,27 +91,20 @@ class _MenuState extends State<Menu> {
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
+                      const Text(
+                        ' Discover',
+                        style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w500,
+                            color: CupertinoColors.black),
+                      ),
                       buildCategory(categories),
                     ]),
                   ),
                 ),
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  sliver: SliverGrid(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 8.0,
-                      mainAxisSpacing: 8.0,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (BuildContext context, int index) {
-                        final product = filteredProducts[index];
-                        return ProductGridItem(product: product);
-                      },
-                      childCount: filteredProducts.length,
-                    ),
-                  ),
+                  sliver: buildGridItem(filteredProducts),
                 ),
               ],
             ),
@@ -104,6 +115,23 @@ class _MenuState extends State<Menu> {
           );
         }
       },
+    );
+  }
+
+  SliverGrid buildGridItem(List<Product> filteredProducts) {
+    return SliverGrid(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 8.0,
+        mainAxisSpacing: 8.0,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          final product = filteredProducts[index];
+          return ProductGridItem(product: product);
+        },
+        childCount: filteredProducts.length,
+      ),
     );
   }
 
@@ -118,7 +146,8 @@ class _MenuState extends State<Menu> {
           return GestureDetector(
             onTap: () {
               setState(() {
-                selectedCategory = category;
+                selectedCategory =
+                    selectedCategory == category ? null : category;
               });
             },
             child: Container(

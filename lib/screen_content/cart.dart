@@ -7,6 +7,7 @@ import 'package:todak_assessment/object/cart_obj.dart';
 import 'package:todak_assessment/object/order_obj.dart';
 import 'package:todak_assessment/object/profile_obj.dart';
 import 'package:todak_assessment/screen_content/address.dart';
+import 'package:todak_assessment/screen_content/widget/custom_elavated_button.dart';
 import 'package:todak_assessment/screen_content/widget/inform_dialog.dart';
 import 'package:todak_assessment/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -170,7 +171,7 @@ class _CartState extends State<Cart> {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-          color:CupertinoColors.white,
+          color: CupertinoColors.white,
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.2),
@@ -220,7 +221,7 @@ class _CartState extends State<Cart> {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color:CupertinoColors.white,
+                      color: CupertinoColors.white,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -315,9 +316,8 @@ class _CartState extends State<Cart> {
     return BottomAppBar(
       elevation: 0,
       color: CupertinoColors.white,
-      child: buildCustomButton(
-        context,
-        () async {
+      child: CustomButton(
+        onPressed: () async {
           final cartItems = await SharedPreferencesHandler.getCart();
 
           if (cartItems.isNotEmpty) {
@@ -343,23 +343,9 @@ class _CartState extends State<Cart> {
             showInformDialog(context, title: 'Cart is Empty');
           }
         },
-      ),
-    );
-  }
-
-  ElevatedButton buildCustomButton(BuildContext context, Function() onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(CupertinoColors.black),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        ),
-        minimumSize: MaterialStateProperty.all(const Size(double.infinity, 56)),
-      ),
-      child: const Text(
-        'Complete Order',
-        style: TextStyle(color: CupertinoColors.white),
+        text: 'Complete Order',
+        backgroundColor: CupertinoColors.activeGreen,
+        textColor: CupertinoColors.white,
       ),
     );
   }
