@@ -46,7 +46,7 @@ class _CartState extends State<Cart> {
         backgroundColor: CupertinoColors.black,
         title: const Text('Cart'),
       ),
-      bottomNavigationBar: buildAddToCartButton(context),
+      bottomNavigationBar: buildCompleteOrderButton(context),
       body: Column(
         children: [
           buildCartItemsSection(),
@@ -332,7 +332,7 @@ class _CartState extends State<Cart> {
     );
   }
 
-  BottomAppBar buildAddToCartButton(BuildContext context) {
+  BottomAppBar buildCompleteOrderButton(BuildContext context) {
     return BottomAppBar(
       elevation: 0,
       color: CupertinoColors.white,

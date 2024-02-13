@@ -182,7 +182,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
 
                       if (success) {
                         Navigator.of(context).pop();
-                        Navigator.of(context).pop();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Item Added to Cart ')),
+                        );
                       } else {
                         print('Failed to save cart.');
                       }
