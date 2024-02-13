@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todak_assessment/api/product_api.dart';
 import 'package:todak_assessment/bloc/product_bloc.dart';
-import 'package:todak_assessment/main.dart';
 import 'package:todak_assessment/screen_content/cart.dart';
 import 'package:todak_assessment/screen_content/menu.dart';
 import 'package:todak_assessment/screen_content/order.dart';
@@ -79,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: const Icon(
                   Icons.shopping_cart,
                   color: CupertinoColors.white,
-                ), // Use whatever icon you prefer
+                ),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -92,37 +91,33 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           body: widgetOptions.elementAt(_selectedIndex),
-          bottomNavigationBar: buildBottomNavigationBar(),
+          bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: CupertinoColors.black,
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.receipt),
+                label: '',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.person,
+                ),
+                label: '',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: CupertinoColors.activeBlue,
+            unselectedItemColor: CupertinoColors.white,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            onTap: _onItemTapped,
+          ),
         ),
       ),
-    );
-  }
-
-  BottomNavigationBar buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      backgroundColor: CupertinoColors.black,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: '',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.receipt),
-          label: '',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(
-            Icons.person,
-          ),
-          label: '',
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      selectedItemColor: CupertinoColors.activeBlue,
-      unselectedItemColor: CupertinoColors.white,
-      showSelectedLabels: false,
-      showUnselectedLabels: false,
-      onTap: _onItemTapped,
     );
   }
 }

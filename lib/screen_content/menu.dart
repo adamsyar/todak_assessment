@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:todak_assessment/bloc/product_bloc.dart';
-import 'package:todak_assessment/main.dart';
 import 'package:todak_assessment/object/product_obj.dart';
 import 'package:todak_assessment/screen_content/item_details.dart';
 import 'package:todak_assessment/screen_content/widget/item_container.dart';

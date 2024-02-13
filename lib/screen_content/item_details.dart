@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:todak_assessment/bloc/product_bloc.dart';
 import 'package:todak_assessment/main.dart';
 import 'package:todak_assessment/object/cart_obj.dart';
 import 'package:todak_assessment/object/product_obj.dart';

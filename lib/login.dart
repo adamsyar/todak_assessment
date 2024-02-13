@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:todak_assessment/main.dart';
 import 'package:todak_assessment/screen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -17,7 +16,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor: CupertinoColors.white,
       body: Center(
-        child: Padding( 
+        child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
