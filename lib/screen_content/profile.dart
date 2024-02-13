@@ -59,7 +59,7 @@ class _ProfileState extends State<Profile> {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
+                    color:CupertinoColors.white,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.grey.withOpacity(0.2),
@@ -91,7 +91,7 @@ class _ProfileState extends State<Profile> {
                                 turns: expand ? 0.5 : 0,
                                 child: const Icon(
                                   CupertinoIcons.chevron_down,
-                                  color: Colors.deepPurple,
+                                  color: CupertinoColors.black,
                                   size: 16,
                                 ),
                               ),

@@ -5,6 +5,7 @@ import 'package:todak_assessment/bloc/product_bloc.dart';
 import 'package:todak_assessment/main.dart';
 import 'package:todak_assessment/object/cart_obj.dart';
 import 'package:todak_assessment/object/product_obj.dart';
+import 'package:todak_assessment/shared_preferences.dart';
 
 class ProductDetailsPage extends StatefulWidget {
   final Product product;
@@ -23,7 +24,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     return Scaffold(
       backgroundColor: primaryBackgroundColor,
       appBar: AppBar(
-        backgroundColor: CupertinoColors.white,
+        foregroundColor: CupertinoColors.white,
+        backgroundColor: CupertinoColors.black,
         scrolledUnderElevation: 0,
         title: Text(widget.product.title),
       ),
@@ -53,24 +55,22 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               ),
             ),
             const SizedBox(height: 10),
-            Row(
-              children: [
-                Text(
-                  widget.product.title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-                Text(
-                  'RM${widget.product.price.toStringAsFixed(2)}',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+            Text(
+              widget.product.title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+              softWrap: true,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'RM${widget.product.price.toStringAsFixed(2)}',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: CupertinoColors.black
+              ),
             ),
             const SizedBox(height: 10),
             Text(
@@ -100,7 +100,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurple),
+        backgroundColor: MaterialStateProperty.all<Color>(CupertinoColors.black),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
@@ -134,7 +134,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             return Container(
               height: 250,
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color:CupertinoColors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(10),
                   topRight: Radius.circular(10),
@@ -151,7 +151,16 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                         width: 100,
                         height: 100,
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                              offset: const Offset(0, 1),
+                            ),
+                          ],
+                        ),
                         child: Image.network(
                           widget.product.thumbnail,
                           fit: BoxFit.cover,
@@ -165,7 +174,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                             Text(
                               widget.product.title,
                               style: const TextStyle(
-                                fontSize: 20,
+                                fontSize: 17,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -189,16 +198,26 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     ],
                   ),
                   const Spacer(),
-                  // Inside buildBottomSheet method
-                  buildCustomButton(context, () {
-                    BlocProvider.of<ProductBloc>(context).add(StoreCartItems([
-                      CartItem(
-                        product: widget.product,
-                        quantity: counter,
-                      )
-                    ]));
-                  }),
+                  buildCustomButton(
+                    context,
+                    () async {
+                      bool success = await SharedPreferencesHandler.saveCart([
+                        CartItem(
+                          product: widget.product,
+                          quantity: counter,
+                        ),
+                      ]);
 
+                      if (success) {
+                        // Cart saved successfully, perform pop action or any other actions
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      } else {
+                        // Handle failure to save the cart
+                        print('Failed to save cart.');
+                      }
+                    },
+                  ),
                   const SizedBox(height: 30),
                 ],
               ),
@@ -236,7 +255,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             icon: const Icon(
               Icons.add_circle,
               size: 25,
-              color: Colors.blue,
+              color: CupertinoColors.black,
             ),
             onPressed: () {
               setState(() {

@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:todak_assessment/main.dart';
 import 'package:todak_assessment/object/cart_obj.dart';
 import 'package:todak_assessment/object/order_obj.dart';
+import 'package:todak_assessment/object/profile_obj.dart';
+import 'package:todak_assessment/screen_content/address.dart';
 import 'package:todak_assessment/screen_content/widget/inform_dialog.dart';
 import 'package:todak_assessment/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class Cart extends StatefulWidget {
   @override
@@ -15,6 +18,7 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   late Future<List<CartItem>> _cartItemsFuture;
+  String selectedAddress = '';
 
   @override
   void initState() {
@@ -24,6 +28,16 @@ class _CartState extends State<Cart> {
 
   Future<void> _loadCartItems() async {
     _cartItemsFuture = SharedPreferencesHandler.getCart();
+    ProfileInfo profile = await SharedPreferencesHandler.getProfile();
+    if (profile.addresses.isNotEmpty) {
+      setState(() {
+        selectedAddress = profile.addresses.first;
+      });
+    } else {
+      setState(() {
+        selectedAddress = 'No address available';
+      });
+    }
   }
 
   @override
@@ -32,7 +46,8 @@ class _CartState extends State<Cart> {
       backgroundColor: primaryBackgroundColor,
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        backgroundColor: Colors.white,
+        foregroundColor: CupertinoColors.white,
+        backgroundColor: CupertinoColors.black,
         title: const Text('Cart'),
       ),
       bottomNavigationBar: buildAddToCartButton(context),
@@ -133,7 +148,7 @@ class _CartState extends State<Cart> {
                           style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
-                              color: Colors.blue),
+                              color: CupertinoColors.black),
                         ),
                       ],
                     ),
@@ -155,7 +170,7 @@ class _CartState extends State<Cart> {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-          color: Colors.white,
+          color:CupertinoColors.white,
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.2),
@@ -186,45 +201,63 @@ class _CartState extends State<Cart> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'No 1, Jalan Desa Aman S10/1 Desa Aman,09410 Padang Serai Kedah',
-                                    softWrap: true,
-                                    maxLines: 2,
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500),
-                                  ),
-                                ],
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      // Navigate to the AddressListPage
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Address(
+                                onAddressSelected: (address) {
+                                  setState(() {
+                                    selectedAddress = address;
+                                  });
+                                },
+                                selectedAddress: selectedAddress,
+                              )),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color:CupertinoColors.white,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 12),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      selectedAddress,
+                                      softWrap: true,
+                                      maxLines: 2,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            CupertinoButton(
-                              minSize: 0,
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 0, bottom: 3, top: 0),
-                              child: Icon(
-                                CupertinoIcons.chevron_forward,
-                                color: Colors.deepPurple,
-                                size: 16,
+                              const CupertinoButton(
+                                minSize: 0,
+                                padding: EdgeInsets.only(
+                                    left: 10, right: 0, bottom: 3, top: 0),
+                                child: Icon(
+                                  CupertinoIcons.chevron_forward,
+                                  color: CupertinoColors.black,
+                                  size: 16,
+                                ),
+                                onPressed: null,
                               ),
-                              onPressed: null,
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -242,9 +275,9 @@ class _CartState extends State<Cart> {
                             final totalPrice = snapshot.data!;
                             return Row(
                               children: [
-                                Text(
+                                const Text(
                                   'Total',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black,
@@ -286,19 +319,28 @@ class _CartState extends State<Cart> {
         context,
         () async {
           final cartItems = await SharedPreferencesHandler.getCart();
-          final order = Order(
-            cartItems: cartItems,
-            address:
-                'No 1, Jalan Desa Aman S10/1 Desa Aman,09410 Padang Serai Kedah', // You can change the address here
-            totalPrice: await SharedPreferencesHandler.getTotalPriceInCart(),
-          );
-          bool orderSaved = await SharedPreferencesHandler.saveOrder(order);
-          if (orderSaved) {
-            bool cartCleared = await SharedPreferencesHandler.clearCart();
-            if (cartCleared) {
-              _loadCartItems();
+
+          if (cartItems.isNotEmpty) {
+            String formattedDate =
+                DateFormat('dd-MM-yyyy').format(DateTime.now());
+
+            final order = Order(
+              cartItems: cartItems,
+              address: selectedAddress,
+              totalPrice: await SharedPreferencesHandler.getTotalPriceInCart(),
+              date: formattedDate, // Passing the formatted date
+            );
+            bool orderSaved = await SharedPreferencesHandler.saveOrder(order);
+            if (orderSaved) {
+              for (int i = 0; i < 1; i++) {
+                Navigator.of(context).pop();
+              }
               showInformDialog(context, title: 'Order Completed', popCount: 2);
             }
+
+            _loadCartItems();
+          } else {
+            showInformDialog(context, title: 'Cart is Empty');
           }
         },
       ),
@@ -309,7 +351,7 @@ class _CartState extends State<Cart> {
     return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.deepPurple),
+        backgroundColor: MaterialStateProperty.all<Color>(CupertinoColors.black),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),

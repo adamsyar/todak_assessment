@@ -5,11 +5,13 @@ class Order {
   final List<CartItem> cartItems;
   final String address;
   final double totalPrice;
+  final String date;
 
   Order({
     required this.cartItems,
     required this.address,
     required this.totalPrice,
+    required this.date,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class Order {
       cartItems: cartItems,
       address: json['address'],
       totalPrice: json['totalPrice'],
+      date: json['date'],
     );
   }
 
@@ -40,6 +43,7 @@ class Order {
       'cartItems': cartItemsJson,
       'address': address,
       'totalPrice': totalPrice,
+      'date': date,
     };
   }
 

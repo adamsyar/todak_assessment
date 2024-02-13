@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todak_assessment/api/product_api.dart';
 import 'package:todak_assessment/bloc/product_bloc.dart';
+import 'package:todak_assessment/main.dart';
 import 'package:todak_assessment/screen_content/cart.dart';
-import 'package:todak_assessment/screen_content/home.dart';
+import 'package:todak_assessment/screen_content/menu.dart';
 import 'package:todak_assessment/screen_content/order.dart';
 import 'package:todak_assessment/screen_content/profile.dart';
 
@@ -17,11 +18,11 @@ class _HomeScreenState extends State<HomeScreen> {
   ProductApi productApi = ProductApi();
   int _selectedIndex = 0;
 
-  static const TextStyle appbarStyle =
-      TextStyle(fontSize: 20, fontWeight: FontWeight.w500);
+  static const TextStyle appbarStyle = TextStyle(
+      fontSize: 20, fontWeight: FontWeight.w500, color: CupertinoColors.white);
 
   static final List<Widget> widgetOptions = <Widget>[
-    Home(),
+    Menu(),
     CompletedOrder(),
     Profile(),
   ];
@@ -54,11 +55,29 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         appBar: AppBar(
           scrolledUnderElevation: 0,
-          backgroundColor: Colors.white,
-          title: title.elementAt(_selectedIndex),
+          backgroundColor: CupertinoColors.black,
+          leading: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/Todak_lightmode.png',
+                  height: 35,
+                  width: 35,
+                  color: CupertinoColors.white,
+                ),
+                SizedBox(width: 5),
+                title.elementAt(_selectedIndex),
+              ],
+            ),
+          ),
+          leadingWidth: 300,
           actions: [
             IconButton(
-              icon: Icon(Icons.shopping_cart), // Use whatever icon you prefer
+              icon: Icon(
+                Icons.shopping_cart,
+                color: CupertinoColors.white,
+              ), // Use whatever icon you prefer
               onPressed: () {
                 Navigator.push(
                   context,
@@ -78,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   BottomNavigationBar buildBottomNavigationBar() {
     return BottomNavigationBar(
-      backgroundColor: CupertinoColors.white,
+      backgroundColor: CupertinoColors.black,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -94,7 +113,8 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ],
       currentIndex: _selectedIndex,
-      selectedItemColor: Colors.deepPurple,
+      selectedItemColor: CupertinoColors.activeBlue,
+      unselectedItemColor: CupertinoColors.white,
       onTap: _onItemTapped,
     );
   }

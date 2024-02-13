@@ -28,12 +28,27 @@ class SharedPreferencesHandler {
       final String? profileJson = prefs.getString(_profileKey);
       if (profileJson != null) {
         final Map<String, dynamic> decoded = jsonDecode(profileJson);
-        return ProfileInfo.fromJson(decoded);
+        final ProfileInfo profile = ProfileInfo.fromJson(decoded);
+        return profile;
       }
       return getDefaultProfile();
     } catch (e) {
-      print('Error getting profile: $e');
       return getDefaultProfile();
+    }
+  }
+
+  static Future<bool> addAddress(String newAddress) async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      final ProfileInfo profile = await getProfile(); // Get the current profile
+      profile.addresses.add(newAddress); // Add the new address
+      final String updatedProfileJson = jsonEncode(profile.toJson());
+      await prefs.setString(
+          _profileKey, updatedProfileJson); // Save the updated profile
+      return true; // Operation succeeded
+    } catch (e) {
+      print('Error adding address: $e');
+      return false; // Operation failed
     }
   }
 
@@ -76,10 +91,10 @@ class SharedPreferencesHandler {
           .toList();
 
       await prefs.setString(_cartKey, jsonEncode(updatedCartJson));
-      return true; // Operation succeeded
+      return true; 
     } catch (e) {
       print('Error saving cart: $e');
-      return false; // Operation failed
+      return false; 
     }
   }
 

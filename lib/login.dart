@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todak_assessment/main.dart';
 import 'package:todak_assessment/screen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -61,7 +62,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
               CupertinoButton(
-                color: Colors.deepPurple,
+                color: CupertinoColors.black,
                 onPressed: () {
                   String username = _usernameController.text;
                   String password = _passwordController.text;

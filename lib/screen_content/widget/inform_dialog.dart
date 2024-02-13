@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:todak_assessment/shared_preferences.dart';
 
 void showInformDialog(BuildContext context,
     {String? title, String? message, int popCount = 1}) {
@@ -11,10 +12,6 @@ void showInformDialog(BuildContext context,
           title ?? 'Error',
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        content: Text(
-          message ?? 'An error occurred. Please try again later.',
-          style: const TextStyle(fontSize: 14),
-        ),
         actions: <Widget>[
           CupertinoDialogAction(
             child: const Text(
@@ -22,12 +19,11 @@ void showInformDialog(BuildContext context,
               style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: Colors.blue),
+                  color: CupertinoColors.black),
             ),
             onPressed: () {
-              for (int i = 0; i < popCount; i++) {
-                Navigator.of(context).pop();
-              }
+              SharedPreferencesHandler.clearCart();
+              Navigator.pop(context);
             },
           ),
         ],
